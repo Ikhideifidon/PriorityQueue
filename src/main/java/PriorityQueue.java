@@ -44,11 +44,10 @@ public class PriorityQueue<E extends Object & Comparable<E>> implements Iterable
     public void insert(E data) {
         if (size == queue.length)
             resize(2 * queue.length);
-        queue[size] = nullChecker(data);
-        size++;
+        queue[size++] = nullChecker(data);
     }
 
-    public E peek() {
+    private int indexFinder() {
        if (isEmpty())
            throw new NoSuchElementException();
        int maxIndex = 0;
@@ -56,20 +55,18 @@ public class PriorityQueue<E extends Object & Comparable<E>> implements Iterable
            if (queue[i].compareTo(queue[maxIndex]) > 0)
                maxIndex = i;
        }
-       return queue[maxIndex];
+       return maxIndex;
+    }
+
+    public E peek() {
+       int index = indexFinder();
+       return queue[index];
     }
 
     public E remove() {
-        if (isEmpty())
-            throw new NoSuchElementException();
-        int maxIndex = 0;
-        for (int i = 1; i < size; i++) {
-            if (queue[i].compareTo(queue[maxIndex]) > 0)
-                maxIndex = i;
-        }
-
-        E answer = queue[maxIndex];
-        queue[maxIndex] = queue[--size];
+        int index = indexFinder();
+        E answer = queue[index];
+        queue[index] = queue[--size];
         return answer;
     }
 
