@@ -1,4 +1,4 @@
-public class HoaresPartition {
+public abstract class HoaresPartition {
 
     /**
      * Returns the final location of the pivot
@@ -10,7 +10,7 @@ public class HoaresPartition {
     }
     private static int partition(int[] array, int lower, int upper) {
         // Check if array is empty
-        if (upper >= lower) {
+        if (upper > lower) {
             int middle = (lower + upper) / 2;
             int pivot = array[middle];
             // Swap the element at the middle with the left element.
@@ -41,19 +41,21 @@ public class HoaresPartition {
             array[right] = pivot;
             return right;
         }
+        else if (upper == lower)
+            return lower;
         return -1;
     }
 
     // Returns the smallest kth element
-    public static int quickSelect(int[] array, int k) {
-        return quickSelect(array, 0, array.length - 1, k);
+    public static int findKthSmallest(int[] array, int k) {
+        return findKthSmallest(array, 0, array.length - 1, k);
     }
-    private static int quickSelect(int[] array, int lower, int upper, int k) {
+    private static int findKthSmallest(int[] array, int lower, int upper, int k) {
         // Check if array is empty.
         if (lower > upper)
             throw new NullPointerException("Array is empty.");
         // Check the bounds of k.
-        if (k < 0 || k > array.length)
+        if (k <= 0 || k > array.length)
             throw new ArrayIndexOutOfBoundsException("k is out of bounds");
         // Check if array is a single element array
         if (lower == upper)
@@ -63,9 +65,35 @@ public class HoaresPartition {
             if (pivotIndex == k - 1)
                 return array[pivotIndex];
             else if (pivotIndex < k - 1)
-                return quickSelect(array, pivotIndex + 1, upper, k);
+                return findKthSmallest(array, pivotIndex + 1, upper, k);
             else
-                return quickSelect(array, lower, pivotIndex - 1, k);
+                return findKthSmallest(array, lower, pivotIndex - 1, k);
         }
+    }
+
+    public static int findKthLargest(int[] nums, int k) {
+        int low = 0;
+        int high = nums.length - 1;
+
+        if (k <= 0 || k > nums.length)
+            throw new ArrayIndexOutOfBoundsException("k is out of bounds");
+
+        k = nums.length - k;
+
+        //While low is less than high keep partitioning, updating low and high to narrow in
+        //on the location of k
+
+        while (low < high){
+            int pivotIndex = HoaresPartition.partition(nums, low, high);
+            if (pivotIndex < k)
+                low = pivotIndex + 1;
+            else if (pivotIndex > k)
+                high = pivotIndex - 1;
+            else
+                return nums[pivotIndex];
+        }
+        if (low == high)
+            return nums[low];
+        throw new NullPointerException("Array is empty");
     }
 }
