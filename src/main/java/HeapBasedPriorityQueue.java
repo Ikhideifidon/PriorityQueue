@@ -103,6 +103,8 @@ public class HeapBasedPriorityQueue<E extends Object & Comparable<? super E>> im
 
     @Override
     public E remove() {
+        if (isEmpty())
+            throw new ArrayStoreException();        
         E answer = data[0];
         swap(0, --t);
         trickleDown(0);
@@ -111,6 +113,8 @@ public class HeapBasedPriorityQueue<E extends Object & Comparable<? super E>> im
 
     @Override
     public E peek() {
+        f (isEmpty())
+            throw new ArrayStoreException(); 
         return data[0];
     }
 
